@@ -5,8 +5,7 @@ from django.views import View
 # Create your views here.
 class ArticleIndexView(View):
     def get(self, request, *args, **kwargs):
-        context ={
-            'app_name': 'Article'
-        }
-        return render(request, 'articles/index.html', context)
+        tags = kwargs.get('tags')
+        article_id = kwargs.get('article_id')
+        return HttpResponse(f"Статья номер {article_id}. Тег {tags}")
 
