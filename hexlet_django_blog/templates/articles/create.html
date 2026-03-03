@@ -3,6 +3,7 @@
 {% block content %}
     <h1>Создать статью</h1>
     <form action="{% url 'articles_create' %}" method="post">
+    {% csrf_token %}
     {% if form.errors %}
         <div style="color: red;">
             <ul>

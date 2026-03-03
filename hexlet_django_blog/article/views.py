@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views import View
 from hexlet_django_blog.article.models import Article
 from .forms import ArticleForm
+from django.contrib import messages
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -24,5 +25,27 @@ class ArticleFormCreateView(View):
         form = ArticleForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Статья успешно создана!')
             return redirect('article_list')
         return render(request, 'articles/create.html', {'form': form})
+
+class ArticleFormEditView(View):
+    def get(self, request, *args, **kwargs):
+        article_id = kwargs.get("id")
+        article = Article.objects.get(id=article_id)
+        form = ArticleForm(instance=article)
+        return render(
+            request, "articles/update.html", {"form": form, "article_id": article_id}
+        )
+    
+    def post(self, request, *args, **kwargs):
+        article_id = kwargs.get("id")
+        article = Article.objects.get(id=article_id)
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Статья успешно обновлена!')
+            return redirect("article_list")
+        return render(
+            request, "articles/update.html", {"form": form, "article_id": article_id}
+        )

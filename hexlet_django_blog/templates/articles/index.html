@@ -2,8 +2,36 @@
 
 {% block content %}
     <h1>Список статей</h1>
-    {% for article in articles %}
-        <h2>{{ article.name }}</h2>
-        <div>{{ article.body|slice:":200" }}</div>
-    {% endfor %}
+
+    <!-- Ссылка на создание новой статьи для удобства -->
+    <p><a href="{% url 'articles_create' %}" style="font-weight: bold;">+ Создать новую статью</a></p>
+    <hr>
+
+    <div class="articles-list">
+        {% for article in articles %}
+            <div class="article-item" style="margin-bottom: 20px;">
+                <!-- Заголовок со ссылкой на страницу просмотра (Show) -->
+                <h2>
+                    
+                        {{ article.name }}
+                    </a>
+                </h2>
+
+        
+                <div class="article-preview">
+                    {{ article.body|slice:":200" }}{% if article.body|length > 200 %}...{% endif %}
+                </div>
+
+                <!-- Кнопка редактирования (Update) -->
+                <div class="article-actions" style="margin-top: 10px;">
+                    <a href="{% url 'articles_update' id=article.id %}">Редактировать статью</a>
+                </div>
+                
+                <hr>
+            </div>
+        {% empty %}
+            <!-- Если в базе еще нет ни одной статьи -->
+            <p>Статей пока нет. <a href="{% url 'articles_create' %}">Напишите первую!</a></p>
+        {% endfor %}
+    </div>
 {% endblock %}
