@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views import View
 from hexlet_django_blog.article.models import Article
@@ -49,3 +49,11 @@ class ArticleFormEditView(View):
         return render(
             request, "articles/update.html", {"form": form, "article_id": article_id}
         )
+    
+class ArticleFormDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        article = get_object_or_404(Article, id=kwargs.get('id'))
+        if article:
+            article.delete()
+            messages.success(request, 'Статья успешно удалена!')
+        return redirect('article_list')
